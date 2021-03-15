@@ -53,7 +53,7 @@ namespace Questionnaire.Services
                             {
                                 QuestionId = int.Parse(entry.Key),
                                 OptionId = optionId,
-                                UserName = userAnswers.Name,
+                                UserName = userAnswers.User,
                                 Stamp = DateTime.Now,
                                 IsCorrect = _questionnaireContext.QuestionsOptions
                                             .Where(o => o.QuestionId == int.Parse(entry.Key))

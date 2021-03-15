@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, Fragment} from 'react';
 import Question from './question';
 import {Button, Input, Spin, Space} from 'antd';
 
@@ -12,9 +12,11 @@ export const Questionnaire = props => {
     useEffect(() => {
         fetch(apiUrl)
         .then(res => res.json()
-        .then(body => setQuestions(body)))
-        .catch(err => console.log(err))
+        .then(body => {
         setLoader(false);
+        setQuestions(body);
+        }))
+        .catch(err => console.log(err))
     }, []);
 
     const handleClick = async e => {
@@ -27,19 +29,20 @@ export const Questionnaire = props => {
        await (await fetch(apiUrl, requestOptions)).json().then(body => console.log(body));
     }
 
-    return (
-        <div>
+    return questions ? 
+        <Fragment>
             <Input 
                 onChange={e => setUser(e.target.value)} 
-                placeholder={'Name'} style={{width: 200}}/>
+                placeholder={'Name'} style={{width: 200}}
+            />
             <br/>
             <br/>
-            <Space size="middle">
-                <Spin spinning={isLoading} />
-            </Space>
              {questions?.map(q => 
                 <Question key={q.questionId} data={q} setAnwsers={setAnswers}/>)}
             <Button onClick={handleClick} size={'large'}>Submit</Button>
-        </div>
-    );
+        </Fragment>
+        :  
+        <Space size="middle">
+            <Spin spinning={isLoading} />
+        </Space>     
 }
